@@ -1,0 +1,78 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: ./docker/php
+    container_name: shortener_laravel_app
+    restart: unless-stopped
+    working_dir: /var/www/html/app
+    volumes:
+      - ./app:/var/www/html/app
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - shortener_net
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: shortener_laravel_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./app:/var/www/html/app
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - shortener_net
+
+  mysql:
+    image: mysql:8.0
+    container_name: shortener_laravel_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: shortener_laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - "3306:3306"
+    networks:
+      - shortener_net
+
+  redis:
+    image: redis:alpine
+    container_name: shortener_laravel_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - shortener_net
+
+  queue:
+    build:
+      context: ./docker/php
+    container_name: shortener_laravel_queue
+    restart: unless-stopped
+    working_dir: /var/www/html/app
+    volumes:
+      - ./app:/var/www/html/app
+    depends_on:
+      - redis
+      - mysql
+    command: php artisan queue:work --sleep=3 --tries=3
+    networks:
+      - shortener_net
+
+networks:
+  shortener_net:
+
+volumes:
+  mysql_data:
