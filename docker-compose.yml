@@ -71,6 +71,22 @@ services:
     networks:
       - shortener_net
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: shortener_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+      UPLOAD_LIMIT: 100M
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - shortener_net
+
 networks:
   shortener_net:
 
