@@ -7,10 +7,12 @@ cd /opt
 git clone https://github.com/shevirev2/ShortenerLaravel.git shortener_laravel
 cd shortener_laravel
 cp app/.env.example app/.env
-docker compose up -d --build
-docker exec -it shortener_laravel_app bash
+UID=$(id -u) GID=$(id -g) docker compose up --build -d
+docker exec -it -u www-data shortener_laravel_app bash
 cd /var/www/html/app
+composer require laravel/horizon
 composer install --no-interaction --prefer-dist --optimize-autoloader
+//php artisan horizon:install
 php artisan key:generate
 php artisan migrate --force
 php artisan db:seed --force || true
@@ -33,8 +35,14 @@ CACHE_DRIVER=redis
 QUEUE_CONNECTION=redis
 REDIS_HOST=redis
 
-------------------------------------------------
+-----------permissions issue---------------------
+on the host:
+sudo chown -R 1000:1000 ./app
+sudo chmod -R 775 ./app
+-------------------------------------------------
 
+
+-------------------------------------------------------------------------------------
 | Task                 | Command                                                     |
 | -------------------- | ----------------------------------------------------------- |
 | Stop all containers  | `docker compose down`                                       |
@@ -42,3 +50,23 @@ REDIS_HOST=redis
 | Run Artisan command  | `docker exec -it shortener_laravel_app php artisan migrate` |
 | View logs            | `docker compose logs -f app nginx queue`                    |
 | Restart all services | `docker compose restart`                                    |
+--------------------------------------------------------------------------------------
+
+
+---------------------------------Horizon-----------------------------------------------------
+|
+| Mode	                     Command	                                    Description
+| Using Horizon       	     docker compose up -d horizon	            Starts Horizon UI + workers
+| Stop Horizon	             docker compose stop horizon	            Stops Horizon
+| View Horizon logs	         docker logs -f shortener_laravel_horizon	Live worker output
+| Access Horizon Dashboard	 http://localhost/horizon                   visit
+| Restart Horizon            docker exec -it shortener_laravel_app php artisan horizon:terminate
+| Dispatch a test job        1. php artisan tinker  
+|                            2. >>> dispatch(new App\Jobs\LinkHitJob(1, '127.0.0.1', 'Test Agent'));
+|
+--------------------------------------------------------------------------------------------------
+
+
+app:        http://localhost
+phpmyadmin: http://localhost:8080/
+horizon:    http://localhost/horizon
