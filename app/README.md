@@ -60,6 +60,7 @@ chmod -R 777 storage bootstrap/cache
 | View Horizon logs      | `docker logs -f shortener_laravel_horizon`              |
 | Open Dashboard         | http://localhost/horizon                                |
 | Restart Workers        | `docker exec -it shortener_laravel_app php artisan horizon:terminate` |
+| Dispatch a test job    | 1. `php artisan tinker` 2. `>>> dispatch(new App\Jobs\LinkHitJob(1, '127.0.0.1', 'Test Agent'));` | 
 
 
 

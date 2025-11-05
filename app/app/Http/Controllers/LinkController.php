@@ -7,7 +7,6 @@ use App\Models\Link;
 use App\Services\SlugService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class LinkController extends Controller
 {
@@ -28,7 +27,6 @@ class LinkController extends Controller
 
     public function redirect($slug)
     {
-        Log::info('XXXXXXXXXX');
         $link = Link::where('slug', $slug)->firstOrFail();
 
         if (!$link->is_active) {
