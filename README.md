@@ -32,40 +32,34 @@ php artisan view:clear
 chmod -R 777 storage bootstrap/cache
 ```
 
-### 3.Access in Browser
+### 3. Access in Browser
 
-Application	http://localhost
-
-PhpMyAdmin	http://localhost:8080/
-
-Horizon UI	http://localhost/horizon
-
-### (*). Useful Commands
-Task	                       Command
-Stop all containers	         ```docker compose down```
-Rebuild app service	         ```docker compose build app && docker compose up -d app```
-Enter to App container	     ```docker exec -it shortener_laravel_app bash```
-View logs	docker             ```compose logs -f app nginx queue```
-Restart all services	       ```docker compose restart```
-
-### (**). Horizon Management
-Action	                  Command / URL
-Start Horizon	            ```docker compose up -d horizon```
-Stop Horizon	            ```docker compose stop horizon```
-View logs	                ```docker logs -f shortener_laravel_horizon```
-Open Horizon Dashboard	  ```http://localhost/horizon```
-Restart Horizon Workers	  ```docker exec -it shortener_laravel_app php artisan horizon:terminate```
-Dispatch Test Job	        ```docker exec -it shortener_laravel_app php artisan tinker → dispatch(new App\Jobs\LinkHitJob(1, '127.0.0.1', 'Test Agent'));```
+| Service      | URL                      |
+|-------------|--------------------------|
+| Application | http://localhost         |
+| PhpMyAdmin  | http://localhost:8080/   |
+| Horizon UI  | http://localhost/horizon |
 
 
+### 4*. Useful Commands
+
+| Task                 | Command                                                     |
+|---------------------|-------------------------------------------------------------|
+| Stop all containers  | `docker compose down`                                       |
+| Rebuild app service  | `docker compose build app && docker compose up -d app`      |
+| Run Artisan command  | `docker exec -it shortener_laravel_app php artisan migrate` |
+| View logs            | `docker compose logs -f app nginx queue`                    |
+| Restart all services | `docker compose restart`                                    |
+
+### 5*. Horizon Management
+
+| Action                  | Command / URL                                          |
+|------------------------|--------------------------------------------------------|
+| Start Horizon          | `docker compose up -d horizon`                          |
+| Stop Horizon           | `docker compose stop horizon`                           |
+| View Horizon logs      | `docker logs -f shortener_laravel_horizon`              |
+| Open Dashboard         | http://localhost/horizon                                |
+| Restart Workers        | `docker exec -it shortener_laravel_app php artisan horizon:terminate` |
 
 
-
-
-
-
-
-
-
-exit
 
