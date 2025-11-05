@@ -1,0 +1,124 @@
+{
+	"info": {
+		"_postman_id": "e7b74066-0842-4a92-a3f3-e7dd159fff94",
+		"name": "Laravel URL Shortener",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49786392",
+		"_collection_link": "https://shevirev-7888120.postman.co/workspace/be06c41f-b11e-45a6-8704-9e5b41580165/collection/49786392-e7b74066-0842-4a92-a3f3-e7dd159fff94?action=share&source=collection_link&creator=49786392"
+	},
+	"item": [
+		{
+			"name": "API Create Link",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{x-api-key}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "target_url",
+							"value": "http://google.com",
+							"type": "text"
+						},
+						{
+							"key": "slug",
+							"value": "google_search",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/api/links",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"links"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Redirect Endpoint",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/r/{{slug}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"r",
+						"{{slug}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Statistics",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{x-api-key}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/api/links/{{slug}}/stats",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"links",
+						"{{slug}}",
+						"stats"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "slug",
+			"value": ""
+		}
+	]
+}
